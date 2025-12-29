@@ -265,6 +265,43 @@ h2 {
     letter-spacing: 2px;
 }
 
+.radar-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.radar-canvas-container {
+    max-width: 500px;
+    width: 100%;
+}
+
+.formula-list {
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    text-align: left;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.formula-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.formula-item strong {
+    color: var(--primary);
+    font-size: 0.9rem;
+}
+
 .info-tip {
     display: inline-flex;
     align-items: center;

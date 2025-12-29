@@ -68,8 +68,18 @@ function renderRadar(data) {
     return `
         <div class="report-card">
             <h2>六维能力分布</h2>
-            <div style="max-width: 600px; margin: 40px auto;">
-                <canvas id="radarChart"></canvas>
+            <div class="radar-layout">
+                <div class="radar-canvas-container">
+                    <canvas id="radarChart"></canvas>
+                </div>
+                <div class="formula-list">
+                    <div class="formula-item"><strong>战斗力</strong><span>正式局击杀中位数 / 50</span></div>
+                    <div class="formula-item"><strong>金钱控制</strong><span>持有/1.5w(40%) + 消费/8k(60%)</span></div>
+                    <div class="formula-item"><strong>探索欲</strong><span>场均侧边生物群落 / 6</span></div>
+                    <div class="formula-item"><strong>存活率</strong><span>正式局胜率 (胜利 / 正式总局数)</span></div>
+                    <div class="formula-item"><strong>肝度</strong><span>总时长(50%) + 活跃天数(50%)</span></div>
+                    <div class="formula-item"><strong>博学</strong><span>生物群落解锁率 (解锁数 / 30)</span></div>
+                </div>
             </div>
         </div>
     `;

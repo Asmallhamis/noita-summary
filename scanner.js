@@ -321,12 +321,12 @@ class NoitaWebScanner {
         const s = this.summary;
         const med = s.medians;
         this.summary.radar_stats = {
-            "战斗力": Math.min(100, Math.floor((med.kills / 150) * 100)),
+            "战斗力": Math.min(100, Math.floor((med.kills / 50) * 100)),
             "金钱控制": Math.min(100, Math.floor((Math.min(15000, med.gold) / 15000) * 40 + (Math.min(8000, med.gold_spent) / 8000) * 60)),
             "探索欲": Math.min(100, Math.floor((med.side_biomes / 6) * 100)),
             "存活率": Math.min(100, Math.floor(s.session_types.victory / Math.max(1, s.session_types.victory + s.session_types.death) * 100)),
             "肝度": Math.min(100, Math.floor((s.total_playtime_s / 360000) * 50 + (Object.keys(s.daily_activity).length / 60) * 50)),
-            "博学": Math.min(100, Math.floor((Object.keys(s.biomes_visited).length / 32) * 100))
+            "博学": Math.min(100, Math.floor((Object.keys(s.biomes_visited).length / 30) * 100))
         };
     }
 
