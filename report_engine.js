@@ -45,19 +45,19 @@ function renderOverview(data) {
             <div class="big-grid">
                 <div class="mini-card">
                     <div class="stat-val">${data.total_sessions}</div>
-                    <div class="stat-label">总轮回次数</div>
+                    <div class="stat-label">总轮回次数<span class="info-tip" data-tip="包含所有胜利、死亡、未完成和测试局">?</span></div>
                 </div>
                 <div class="mini-card">
                     <div class="stat-val">${totalHours}h</div>
-                    <div class="stat-label">总游玩时长</div>
+                    <div class="stat-label">总游玩时长<span class="info-tip" data-tip="所有轮回累计的实时游戏时间">?</span></div>
                 </div>
                 <div class="mini-card">
                     <div class="stat-val">${data.total_enemies_killed.toLocaleString()}</div>
-                    <div class="stat-label">累计击杀</div>
+                    <div class="stat-label">累计击杀<span class="info-tip" data-tip="炼金途中所有倒在法杖下的生灵总数">?</span></div>
                 </div>
                 <div class="mini-card">
                     <div class="stat-val">${avgSpent}</div>
-                    <div class="stat-label">场均消费 (买买买!)</div>
+                    <div class="stat-label">场均消费<span class="info-tip" data-tip="仅统计正式局（胜利/失败）中购买物品的花费">?</span></div>
                 </div>
             </div>
         </div>
@@ -115,10 +115,10 @@ function renderBehaviorStyle(data) {
             <h2>行为风格</h2>
             <p class="subtitle" style="margin-top: -20px;">${styleTitle}</p>
             <div class="big-grid">
-                <div class="mini-card"><div class="stat-val">${b.total_kicks.toLocaleString()}</div><div class="stat-label">踢击</div></div>
-                <div class="mini-card"><div class="stat-val">${b.total_teleports.toLocaleString()}</div><div class="stat-label">瞬移</div></div>
-                <div class="mini-card"><div class="stat-val">${b.total_wands_edited.toLocaleString()}</div><div class="stat-label">调校法杖</div></div>
-                <div class="mini-card"><div class="stat-val">${(b.total_projectiles_shot / 1000).toFixed(1)}k</div><div class="stat-label">射出咒语</div></div>
+                <div class="mini-card"><div class="stat-val">${b.total_kicks.toLocaleString()}</div><div class="stat-label">踢击<span class="info-tip" data-tip="黄金右脚的艺术，包含踢物体和生物">?</span></div></div>
+                <div class="mini-card"><div class="stat-val">${b.total_teleports.toLocaleString()}</div><div class="stat-label">瞬移<span class="info-tip" data-tip="通过法杖或技能实现的坐标跃迁次数">?</span></div></div>
+                <div class="mini-card"><div class="stat-val">${b.total_wands_edited.toLocaleString()}</div><div class="stat-label">调校法杖<span class="info-tip" data-tip="在神圣之山或通过技能修改法杖构筑的次数">?</span></div></div>
+                <div class="mini-card"><div class="stat-val">${(b.total_projectiles_shot / 1000).toFixed(1)}k</div><div class="stat-label">射出咒语<span class="info-tip" data-tip="所有轮回中发射的法术投射物总数">?</span></div></div>
             </div>
         </div>
     `;
@@ -136,11 +136,11 @@ function renderEcology(data) {
                 <div style="display:flex; flex-direction:column; gap:20px">
                     <div class="mini-card">
                         <div class="stat-val">${(data.total_enemies_killed / data.total_sessions).toFixed(1)}</div>
-                        <div class="stat-label">场均割草数</div>
+                        <div class="stat-label">场均割草数<span class="info-tip" data-tip="平均每局轮回杀死的敌人数量">?</span></div>
                     </div>
                     <div class="mini-card">
                         <div class="stat-val">${data.progression.peak_exploration}</div>
-                        <div class="stat-label">探索之最 (地点数)</div>
+                        <div class="stat-label">探索之最<span class="info-tip" data-tip="单局轮回中抵达过的独特地点数量（包含并行世界）">?</span></div>
                     </div>
                 </div>
             </div>

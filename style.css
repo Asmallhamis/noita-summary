@@ -265,6 +265,42 @@ h2 {
     letter-spacing: 2px;
 }
 
+.info-tip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    font-size: 10px;
+    color: var(--text-dim);
+    cursor: help;
+    margin-left: 5px;
+    vertical-align: middle;
+    position: relative;
+}
+
+.info-tip:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    border: 1px solid var(--primary);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
 /* Badge System */
 .badge-item {
     background: var(--glass);
