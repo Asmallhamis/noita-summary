@@ -170,7 +170,8 @@ class NoitaWebScanner {
 
         sum.suffering.total_damage_taken += data.damage_taken;
         sum.suffering.total_healed += data.healed;
-        sum.suffering.peak_hp = Math.max(sum.suffering.peak_hp, data.hp_max);
+        // Noita XML 中的 hp 是实际血量 * 25，这里除以 25 还原为玩家看到的数值
+        sum.suffering.peak_hp = Math.max(sum.suffering.peak_hp, data.hp_max / 25);
 
         sum.progression.total_items_picked_up += data.items_picked;
         if (data.gold_infinite) sum.progression.gold_infinite_runs++;

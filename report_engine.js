@@ -138,7 +138,7 @@ function renderEcology(data) {
                         <div class="stat-label">场均割草数</div>
                     </div>
                     <div class="mini-card">
-                        <div class="stat-val">${Math.floor(data.suffering.peak_hp)}</div>
+                        <div class="stat-val">${data.suffering.peak_hp > 1000000 ? (data.suffering.peak_hp / 1000000).toFixed(1) + 'M' : Math.floor(data.suffering.peak_hp).toLocaleString()}</div>
                         <div class="stat-label">血量巅峰 (Max HP)</div>
                     </div>
                 </div>
