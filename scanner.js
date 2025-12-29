@@ -346,6 +346,55 @@ class NoitaWebScanner {
 
         return r;
     }
+
+    exportFullText(data) {
+        let txt = `=== NOITA 年度终极真理档案 (${data.year}) ===\n`;
+        txt += `生成时间: ${new Date().toLocaleString()}\n\n`;
+
+        txt += `[核心统计]\n`;
+        txt += `- 总轮回次数: ${data.total_sessions}\n`;
+        txt += `- 总游玩时长: ${(data.total_playtime_s / 3600).toFixed(2)} 小时\n`;
+        txt += `- 累计击杀: ${data.total_enemies_killed}\n`;
+        txt += `- 累计金币收集: ${data.total_gold_collected}\n`;
+        txt += `- 累计金币消费: ${data.total_gold_spent}\n`;
+        txt += `- 胜/败/测试/未完成: ${data.session_types.victory}/${data.session_types.death}/${data.session_types.test_run}/${data.session_types.unfinished}\n\n`;
+
+        txt += `[行为风格]\n`;
+        txt += `- 踢击总数: ${data.behavioral.total_kicks}\n`;
+        txt += `- 瞬移总数: ${data.behavioral.total_teleports}\n`;
+        txt += `- 调校法杖: ${data.behavioral.total_wands_edited}\n`;
+        txt += `- 射出咒语: ${data.behavioral.total_projectiles_shot}\n\n`;
+
+        txt += `[最高纪录]\n`;
+        txt += `- 最长单局: ${(data.records.longest_session.playtime / 60).toFixed(1)} 分钟\n`;
+        txt += `- 暴富局金币: ${data.records.richest_run.gold}\n`;
+        txt += `- 杀戮之最: ${data.records.bloodiest_run.kills} 击杀\n`;
+        txt += `- 探索之最: ${data.progression.peak_exploration} 个地点\n`;
+        txt += `- 最高连胜/连败: ${data.records.max_win_streak}/${data.records.max_loss_streak}\n\n`;
+
+        txt += `[生存报告]\n`;
+        txt += `- 累计承受伤害: ${Math.floor(data.suffering.total_damage_taken)}\n`;
+        txt += `- 累计获得治疗: ${Math.floor(data.suffering.total_healed)}\n`;
+        txt += `- 宿敌: ${data.records.nemesis.name} (击杀你 ${data.records.nemesis.count} 次)\n\n`;
+
+        txt += `[详细击杀清单 (Top 50)]\n`;
+        Object.entries(data.enemies_killed_breakdown).slice(0, 50).forEach(([name, count]) => {
+            txt += `${name.padEnd(20)}: ${count}\n`;
+        });
+
+        txt += `\n[死亡原因统计]\n`;
+        Object.entries(data.all_death_causes).forEach(([cause, count]) => {
+            txt += `${cause.padEnd(20)}: ${count}\n`;
+        });
+
+        txt += `\n[足迹 (访问生物群落)]\n`;
+        Object.entries(data.biomes_visited).forEach(([biome, count]) => {
+            txt += `${biome.padEnd(20)}: ${count}\n`;
+        });
+
+        txt += `\n\n--- 真理并非被发现，而是被经历 ---`;
+        return txt;
+    }
 }
 
 // Controller Logic

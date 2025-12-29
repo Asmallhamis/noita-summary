@@ -31,6 +31,7 @@ window.renderReport = function (data) {
 
     initNavigation();
     initCharts(data);
+    initDownload(data);
 };
 
 // --- Sub-Renderers ---
@@ -214,7 +215,10 @@ function renderEnding(data) {
             <p style="font-size: 1.5rem; margin-bottom: 20px; color: var(--text-dim);">“真理并非被发现，而是被经历。”</p>
             <h1 style="font-size: 4rem;">NOITA ${data.year}</h1>
             <p style="margin-top: 40px; color: var(--text-dim); font-size: 0.9rem;">感谢在这一年里不懈探索的你。</p>
-            <button class="btn-primary" onclick="location.reload()" style="margin-top: 40px;">再次回味</button>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 40px;">
+                <button class="btn-primary" onclick="location.reload()">再次回味</button>
+                <button class="btn-secondary" id="download-archive" style="padding: 16px 32px; border-radius: 50px; font-weight: 600;">下载完整档案 (.txt)</button>
+            </div>
         </div>
     `;
 }
@@ -315,4 +319,22 @@ function initCharts(data) {
     Object.entries(data.all_death_causes).slice(0, 8).forEach(([name, count]) => {
         nList.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:12px; font-size:0.9rem;"><span>${name}</span> <span style="opacity:0.6">${count} 次</span></div>`;
     });
+}
+
+function initDownload(data) {
+    const btn = document.getElementById('download-archive');
+    if (!btn) return;
+    btn.onclick = () => {
+        const scanner = new NoitaWebScanner();
+        const content = scanner.exportFullText(data);
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Noita_${data.year}_年度真理档案.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
 }
