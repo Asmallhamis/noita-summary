@@ -112,8 +112,9 @@ class NoitaWebScanner {
         const s = statsElem.attributes;
         const getAttr = (name, def = 0) => s.getNamedItem(name) ? s.getNamedItem(name).value : def;
         const safeFloat = (val) => {
-            if (!val || String(val).includes("INF")) return 0;
-            return parseFloat(val) || 0;
+            if (!val || String(val).includes("INF")) return 1e15; // 封顶，防止超出 JS 安全范围
+            let f = parseFloat(val) || 0;
+            return Math.min(f, 1e15); // 限制在安全范围内
         };
 
         const data = {

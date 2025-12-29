@@ -176,8 +176,8 @@ function renderSuffering(data) {
                     <div style="width: ${healPct}%; background: var(--success);"></div>
                 </div>
                 <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-top:10px">
-                    <span>${Math.floor(sd.total_damage_taken).toLocaleString()} Damage</span>
-                    <span>${Math.floor(sd.total_healed).toLocaleString()} Healed<span class="info-tip" data-tip="注：治疗液的恢复通常不计入此项">?</span></span>
+                    <span>${formatBigNumber(sd.total_damage_taken)} Damage</span>
+                    <span>${formatBigNumber(sd.total_healed)} Healed<span class="info-tip" data-tip="注：治疗液的恢复通常不计入此项">?</span></span>
                 </div>
                 
                 <div style="margin-top:40px; text-align:left; border-top: 1px solid var(--border); padding-top:20px;">
@@ -224,6 +224,15 @@ function renderEnding(data) {
 }
 
 // --- Logic Engines ---
+
+function formatBigNumber(num) {
+    if (!num || num === 0) return "0";
+    const units = ["", "K", "M", "B", "T", "P", "E"];
+    const i = Math.floor(Math.log10(Math.abs(num)) / 3);
+    if (i <= 0) return Math.floor(num).toLocaleString();
+    const unit = units[Math.min(i, units.length - 1)];
+    return (num / Math.pow(10, Math.min(i, units.length - 1) * 3)).toFixed(2) + unit;
+}
 
 function initNavigation() {
     let currentSlide = 0;
