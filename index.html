@@ -17,7 +17,7 @@
 
     <!-- Landing Page -->
     <section class="container hero" id="landing-page">
-        <h1>NOITA 2025</h1>
+        <h1 id="main-title">NOITA 2025</h1>
         <p class="subtitle">属于炼金术师的年度记忆。解锁所有轮回中的真理、受难与神迹。</p>
 
         <button class="btn-primary" id="open-folder">
@@ -27,11 +27,16 @@
             选择 sessions 文件夹
         </button>
 
-        <div class="progress-container" id="progress-container">
+        <div id="progress-container" style="display: none;">
             <div class="progress-bar">
                 <div class="progress-fill" id="progress-fill"></div>
             </div>
-            <p class="status-text" id="status-text">准备扫描...</p>
+            <p id="status-text">正在扫描存档目录...</p>
+            <div id="year-selector" style="display: none; margin-top: 30px;">
+                <p style="margin-bottom: 15px; opacity: 0.8;">发现多份年度记录，请选择解析年度：</p>
+                <div id="year-buttons" style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                </div>
+            </div>
         </div>
 
         <p style="margin-top: 40px; color: var(--text-dim); font-size: 0.8rem; max-width: 400px; line-height: 1.6;">

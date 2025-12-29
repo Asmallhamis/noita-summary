@@ -1,7 +1,7 @@
 # Noita Annual Summary - Strict Privacy Filter
 
-# Ignore EVERYTHING by default
-/*
+# Temporarily open for editing
+# /*
 
 # --------------------------------------------------
 # ALLOW only the core web application files
@@ -12,6 +12,7 @@
 !report_engine.js
 !.gitignore
 !README.md
+!*.md
 
 # Documentations (Keep local)
 deployment_guide.md

@@ -50,51 +50,57 @@ class NoitaWebScanner {
         };
     }
 
-    async scanDirectory(dirHandle, onProgress) {
+    async scanDirectory(dirHandle, onProgress, selectedYear = "all") {
+        this.summary.year = selectedYear === "all" ? "全时期" : parseInt(selectedYear);
         let statsFiles = [];
         for await (const entry of dirHandle.values()) {
             if (entry.kind === 'file' && entry.name.endsWith('_stats.xml')) {
-                statsFiles.push(entry);
+                const fYear = entry.name.substring(0, 4);
+                if (selectedYear === "all" || fYear === String(selectedYear)) {
+                    statsFiles.push(entry);
+                }
             }
         }
 
         const total = statsFiles.length;
         let processed = 0;
+        const batchSize = 100; // 提高并行批处理大小
 
-        // Auto-detect year: count sessions per year from filenames
-        const yearCounts = {};
-        statsFiles.forEach(f => {
-            const y = f.name.substring(0, 4);
-            if (/^\d{4}$/.test(y)) yearCounts[y] = (yearCounts[y] || 0) + 1;
-        });
-        const sortedYears = Object.entries(yearCounts).sort((a, b) => b[1] - a[1]);
-        if (sortedYears.length > 0) {
-            this.summary.year = parseInt(sortedYears[0][0]);
-        }
+        for (let i = 0; i < statsFiles.length; i += batchSize) {
+            const batch = statsFiles.slice(i, i + batchSize);
+            await Promise.all(batch.map(async (fileHandle) => {
+                const timestamp = fileHandle.name.replace('_stats.xml', '');
+                const file = await fileHandle.getFile();
+                const text = await file.text();
 
-        for (const fileHandle of statsFiles) {
-            const timestamp = fileHandle.name.replace('_stats.xml', '');
-            const file = await fileHandle.getFile();
-            const text = await file.text();
+                let killsText = "";
+                try {
+                    const killsHandle = await dirHandle.getFileHandle(`${timestamp}_kills.xml`);
+                    const killsFile = await killsHandle.getFile();
+                    killsText = await killsFile.text();
+                } catch (e) { }
 
-            // Look for corresponding kills file
-            let killsText = "";
-            try {
-                const killsHandle = await dirHandle.getFileHandle(`${timestamp}_kills.xml`);
-                const killsFile = await killsHandle.getFile();
-                killsText = await killsFile.text();
-            } catch (e) { }
-
-            await this.parseSession(timestamp, text, killsText);
-
-            processed++;
-            if (onProgress) onProgress(processed, total);
+                await this.parseSession(timestamp, text, killsText);
+                processed++;
+                if (onProgress) onProgress(processed, total);
+            }));
         }
 
         this.calculateDeepStats();
         this.calculateBadges();
         this.calculateRadarStats();
         return this.getReport();
+    }
+
+    async preScanYears(dirHandle) {
+        const yearCounts = {};
+        for await (const entry of dirHandle.values()) {
+            if (entry.kind === 'file' && entry.name.endsWith('_stats.xml')) {
+                const y = entry.name.substring(0, 4);
+                if (/^\d{4}$/.test(y)) yearCounts[y] = (yearCounts[y] || 0) + 1;
+            }
+        }
+        return yearCounts;
     }
 
     async parseSession(timestamp, statsXml, killsXml) {
@@ -182,7 +188,7 @@ class NoitaWebScanner {
             const min = parseInt(timePart.substring(2, 4));
 
             const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            if (year === String(this.summary.year)) {
+            if (year === String(this.summary.year) || this.summary.year === "全时期") {
                 sum.time_distribution.hourly[hour]++;
                 sum.time_distribution.monthly[month - 1]++;
                 sum.daily_activity[dateStr] = (sum.daily_activity[dateStr] || 0) + 1;
@@ -353,25 +359,65 @@ btn.addEventListener('click', async () => {
         const dirHandle = await window.showDirectoryPicker();
         btn.style.display = 'none';
         progress.style.display = 'block';
+        status.innerText = "正在预扫描年份...";
 
         const scanner = new NoitaWebScanner();
-        const report = await scanner.scanDirectory(dirHandle, (p, t) => {
-            const pct = Math.floor((p / t) * 100);
-            fill.style.width = pct + '%';
-            status.innerText = `正在解析 ${p} / ${t}个文件... (${pct}%)`;
+        const yearCounts = await scanner.preScanYears(dirHandle);
+
+        // 确保 2025 始终出现在选项中（即使没有数据也显示为 0）
+        if (!yearCounts["2025"]) yearCounts["2025"] = 0;
+
+        // Show year selector
+        const yearSelector = document.getElementById('year-selector');
+        const yearButtons = document.getElementById('year-buttons');
+        yearSelector.style.display = 'block';
+        yearButtons.innerHTML = "";
+        status.innerText = "请选择统计年度";
+
+        // 按年份倒序排列，2025 在最前
+        const sortedYears = Object.entries(yearCounts).sort((a, b) => b[0] < b[0] ? 1 : -1);
+
+        const createBtn = (year, count) => {
+            const b = document.createElement('button');
+            b.className = 'btn-secondary';
+            b.style.fontSize = '0.9rem';
+            b.style.padding = '8px 16px';
+            b.innerHTML = `${year} <span style="opacity:0.6; font-size:0.7rem;">(${count} 次)</span>`;
+            b.onclick = async () => {
+                yearSelector.style.display = 'none';
+                status.innerText = `正在初始化 ${year === "all" ? "全时期" : year} 统计任务...`;
+                if (year !== "all") {
+                    document.getElementById('main-title').innerText = `NOITA ${year}`;
+                }
+
+                const report = await scanner.scanDirectory(dirHandle, (p, t) => {
+                    const pct = Math.floor((p / t) * 100);
+                    fill.style.width = pct + '%';
+                    status.innerText = `正在解析 ${p} / ${t}个文件... (${pct}%)`;
+                }, year);
+
+                // Switch to report view
+                document.getElementById('landing-page').style.display = 'none';
+                const reportView = document.getElementById('report-view');
+                reportView.style.display = 'block';
+
+                if (window.renderReport) {
+                    window.renderReport(report);
+                } else {
+                    console.error("Report engine not loaded");
+                    reportView.innerText = JSON.stringify(report, null, 2);
+                }
+            };
+            return b;
+        };
+
+        // All years option
+        const totalCount = Object.values(yearCounts).reduce((a, b) => a + b, 0);
+        yearButtons.appendChild(createBtn("all", totalCount));
+
+        sortedYears.forEach(([year, count]) => {
+            yearButtons.appendChild(createBtn(year, count));
         });
-
-        // Switch to report view
-        document.getElementById('landing-page').style.display = 'none';
-        const reportView = document.getElementById('report-view');
-        reportView.style.display = 'block';
-
-        if (window.renderReport) {
-            window.renderReport(report);
-        } else {
-            console.error("Report engine not loaded");
-            reportView.innerText = JSON.stringify(report, null, 2);
-        }
 
     } catch (err) {
         console.error(err);
