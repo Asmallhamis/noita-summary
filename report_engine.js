@@ -73,12 +73,12 @@ function renderRadar(data) {
                     <canvas id="radarChart"></canvas>
                 </div>
                 <div class="formula-list">
-                    <div class="formula-item"><strong>战斗力</strong><span>正式局击杀中位数 / 50</span></div>
-                    <div class="formula-item"><strong>金钱控制</strong><span>持有/1.5w(40%) + 消费/8k(60%)</span></div>
-                    <div class="formula-item"><strong>探索欲</strong><span>场均侧边生物群落 / 6</span></div>
-                    <div class="formula-item"><strong>存活率</strong><span>正式局胜率 (胜利 / 正式总局数)</span></div>
-                    <div class="formula-item"><strong>肝度</strong><span>总时长(50%) + 活跃天数(50%)</span></div>
-                    <div class="formula-item"><strong>博学</strong><span>生物群落解锁率 (解锁数 / 30)</span></div>
+                    <div class="formula-item"><strong>杀戮欲</strong><span>正式局(胜/败)击杀中位数 / 40</span></div>
+                    <div class="formula-item"><strong>金钱控制</strong><span>中位数：总获得/8k(权重40%) + 总花费/4k(60%)</span></div>
+                    <div class="formula-item"><strong>探索欲</strong><span>场均进入非主线群落数 / 6 (真菌洞穴、坍塌矿场也计分)</span></div>
+                    <div class="formula-item"><strong>存活率</strong><span>正式局胜率 (胜利次数 / 胜+败总局数)</span></div>
+                    <div class="formula-item"><strong>肝度</strong><span>总时长/100h (权重50%) + 活跃天数/60天 (50%)</span></div>
+                    <div class="formula-item"><strong>博学</strong><span>生物群落解锁率 (已发现群落数 / 30)</span></div>
                 </div>
             </div>
         </div>
