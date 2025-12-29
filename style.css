@@ -256,6 +256,7 @@ h2 {
     font-weight: 800;
     color: var(--secondary);
     margin-bottom: 5px;
+    white-space: nowrap;
 }
 
 .stat-label {
@@ -355,6 +356,137 @@ h2 {
     border-radius: 10px;
     overflow: hidden;
     display: flex;
+}
+
+/* Legendary Run Styles */
+.legendary-card {
+    background: linear-gradient(145deg, rgba(157, 78, 221, 0.1), rgba(255, 158, 0, 0.05));
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.legendary-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(157, 78, 221, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.legendary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.badge-gold {
+    background: linear-gradient(90deg, #ff9e00, #ff00ff);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 0 20px rgba(255, 158, 0, 0.4);
+}
+
+.run-date {
+    font-family: 'Outfit';
+    opacity: 0.5;
+    font-size: 0.9rem;
+}
+
+.legendary-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.legendary-items {
+    text-align: center;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.item-total-count {
+    font-size: 6rem;
+    font-weight: 800;
+    line-height: 1;
+    background: linear-gradient(to bottom, #fff, var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+.item-label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.item-desc {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.legendary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-label {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+}
+
+.detail-val {
+    font-weight: 600;
+}
+
+.status-win { color: var(--success); }
+.status-loss { color: var(--danger); }
+
+.legendary-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+}
+
+.death-reason {
+    color: var(--danger);
+    font-weight: 600;
+}
+
+.seed-info {
+    opacity: 0.5;
+}
+
+.seed-info code {
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
 }
 
 /* Responsive */

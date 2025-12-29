@@ -37,7 +37,8 @@ class NoitaWebScanner {
                 bloodiest_run: { timestamp: "", kills: 0 },
                 nemesis: { name: "", count: 0 },
                 max_win_streak: 0,
-                max_loss_streak: 0
+                max_loss_streak: 0,
+                legendary_run: null
             },
             daily_activity: {},
             behavioral: { total_kicks: 0, total_teleports: 0, total_wands_edited: 0, total_projectiles_shot: 0 },
@@ -245,6 +246,23 @@ class NoitaWebScanner {
         if (data.gold_spent > sum.records.most_extravagant_run.spent) sum.records.most_extravagant_run = { timestamp, spent: data.gold_spent };
         if (data.enemies_killed > sum.records.bloodiest_run.kills) sum.records.bloodiest_run = { timestamp, kills: data.enemies_killed };
 
+        // Legendary Run Selection (Excluding test runs)
+        if (!data.is_test_run && (data.is_victory || data.is_death || data.is_unfinished)) {
+            if (!sum.records.legendary_run || data.items_picked > sum.records.legendary_run.items) {
+                sum.records.legendary_run = {
+                    timestamp,
+                    items: data.items_picked,
+                    playtime: data.playtime,
+                    gold: data.gold_all,
+                    kills: data.enemies_killed,
+                    killed_by: data.killed_by,
+                    is_victory: data.is_victory,
+                    seed: data.world_seed,
+                    places: data.places_visited
+                };
+            }
+        }
+
         this.raw.sessionsData.push({ type: typeStr, ts: timestamp });
 
         // Kills Map
@@ -335,9 +353,9 @@ class NoitaWebScanner {
         const s = this.summary;
         const med = s.medians;
         this.summary.radar_stats = {
-            "杀戮欲": Math.min(100, Math.floor((med.kills / 40) * 100)),
-            "金钱控制": Math.min(100, Math.floor((Math.min(8000, med.gold) / 8000) * 40 + (Math.min(4000, med.gold_spent) / 4000) * 60)),
-            "探索欲": Math.min(100, Math.floor((med.side_biomes / 6) * 100)),
+            "杀戮欲": Math.min(100, Math.floor((med.kills / 30) * 100)),
+            "金钱控制": Math.min(100, Math.floor((Math.min(7000, med.gold) / 7000) * 40 + (Math.min(3000, med.gold_spent) / 3000) * 60)),
+            "探索欲": Math.min(100, Math.floor((med.side_biomes / 5) * 100)),
             "存活率": Math.min(100, Math.floor(s.session_types.victory / Math.max(1, s.session_types.victory + s.session_types.death) * 100)),
             "肝度": Math.min(100, Math.floor((s.total_playtime_s / 360000) * 50 + (Object.keys(s.daily_activity).length / 60) * 50)),
             "博学": Math.min(100, Math.floor((Object.keys(s.biomes_visited).length / 30) * 100))

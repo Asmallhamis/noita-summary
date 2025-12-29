@@ -12,6 +12,7 @@ window.renderReport = function (data) {
     const slidesContainer = document.getElementById('slides-container');
     const sections = [
         renderOverview(data),
+        renderLegendaryRun(data),
         renderRadar(data),
         renderDailyHeatmap(data),
         renderDeathAnalysis(data),
@@ -44,7 +45,7 @@ function renderOverview(data) {
     return `
         <div class="report-card">
             <h2>${data.year} 年度概览</h2>
-            <div class="big-grid">
+            <div class="big-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="mini-card">
                     <div class="stat-val">${data.total_sessions}</div>
                     <div class="stat-label">总轮回次数<span class="info-tip" data-tip="包含所有胜利、死亡、未完成和测试局">?</span></div>
@@ -61,9 +62,72 @@ function renderOverview(data) {
                     </label>
                 </div>
                 <div class="mini-card">
+                    <div class="stat-val">${data.progression.total_items_picked_up.toLocaleString()}</div>
+                    <div class="stat-label">收集物品总数<span class="info-tip" data-tip="items,全年捡起的法杖、药水等物品总计">?</span></div>
+                </div>
+                <div class="mini-card">
                     <div class="stat-val">${avgSpent}</div>
                     <div class="stat-label">场均消费<span class="info-tip" data-tip="仅统计正式局（胜利/失败）中购买物品的花费">?</span></div>
                 </div>
+                <div class="mini-card">
+                    <div class="stat-val">${data.progression.peak_exploration}</div>
+                    <div class="stat-label">单局最高探索<span class="info-tip" data-tip="单局内抵达过的独特区域数量峰值">?</span></div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function renderLegendaryRun(data) {
+    const run = data.records.legendary_run;
+    if (!run) return `<div class="report-card"><h2>年度最运营局</h2><p>这一年你似乎还没有开始真正的冒险。</p></div>`;
+
+    const playtimeMin = (run.playtime / 60).toFixed(1);
+    const dateStr = run.timestamp.split('-')[0].replace(/(\d{4})(\d{2})(\d{2})/, '$1/$2/$3');
+    const status = run.is_victory ? "胜利" : "陨落";
+    const statusClass = run.is_victory ? "status-win" : "status-loss";
+
+    return `
+        <div class="report-card legendary-card">
+            <div class="legendary-header">
+                <span class="badge-gold">年度最运营局</span>
+                <span class="run-date">${dateStr}</span>
+            </div>
+            
+            <div class="legendary-main">
+                <div class="legendary-items">
+                    <div class="item-total-count">${run.items}</div>
+                    <div class="item-label">拾获物品总数</div>
+                    <p class="item-desc">法杖、药水、法术... 每一件都是真理的碎片</p>
+                </div>
+                
+                <div class="legendary-details">
+                    <div class="detail-row">
+                        <span class="detail-label">持续时长</span>
+                        <span class="detail-val">${playtimeMin} min</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">最终结局</span>
+                        <span class="detail-val ${statusClass}">${status}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">累计击杀</span>
+                        <span class="detail-val">${run.kills.toLocaleString()}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">搜刮金币</span>
+                        <span class="detail-val">${formatBigNumber(run.gold)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">探索区域</span>
+                        <span class="detail-val">${run.places}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legendary-footer">
+                <p>死因: <span class="death-reason">${run.killed_by || "未知"}</span></p>
+                <p class="seed-info">世界种子: <code>${run.seed}</code></p>
             </div>
         </div>
     `;
@@ -78,9 +142,9 @@ function renderRadar(data) {
                     <canvas id="radarChart"></canvas>
                 </div>
                 <div class="formula-list">
-                    <div class="formula-item"><strong>杀戮欲</strong><span>正式局(胜/败)击杀中位数 / 40</span></div>
-                    <div class="formula-item"><strong>金钱控制</strong><span>中位数：总获得/8k(权重40%) + 总花费/4k(60%)</span></div>
-                    <div class="formula-item"><strong>探索欲</strong><span>场均进入非主线群落数 / 6 (真菌洞穴、坍塌矿场也计分)</span></div>
+                    <div class="formula-item"><strong>杀戮欲</strong><span>正式局(胜/败)击杀中位数 / 30</span></div>
+                    <div class="formula-item"><strong>金钱控制</strong><span>中位数：总获得/7k(权重40%) + 总花费/3k(60%)</span></div>
+                    <div class="formula-item"><strong>探索欲</strong><span>场均进入非主线群落数 / 5 (真菌洞穴、坍塌矿场也计分)</span></div>
                     <div class="formula-item"><strong>存活率</strong><span>正式局胜率 (胜利次数 / 胜+败总局数)</span></div>
                     <div class="formula-item"><strong>肝度</strong><span>总时长/100h (权重50%) + 活跃天数/60天 (50%)</span></div>
                     <div class="formula-item"><strong>博学</strong><span>生物群落解锁率 (已发现群落数 / 30)</span></div>
