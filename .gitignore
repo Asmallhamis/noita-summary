@@ -30,3 +30,4 @@ sessions/
 __pycache__/
 .vscode/
 .idea/
+自动推送脚本auto_push.bat
