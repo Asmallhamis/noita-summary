@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noita 2025 年度终极真理报告</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="bg-gradient"></div>
+
+    <!-- Landing Page -->
+    <section class="container hero" id="landing-page">
+        <h1>NOITA 2025</h1>
+        <p class="subtitle">属于炼金术师的年度记忆。解锁所有轮回中的真理、受难与神迹。</p>
+
+        <button class="btn-primary" id="open-folder">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            选择 sessions 文件夹
+        </button>
+
+        <div class="progress-container" id="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <p class="status-text" id="status-text">准备扫描...</p>
+        </div>
+
+        <p style="margin-top: 40px; color: var(--text-dim); font-size: 0.8rem; max-width: 400px; line-height: 1.6;">
+            提示: 通常位于 %APPDATA%\..\LocalLow\Nolla_Games_Noita\save00\stats\sessions
+            <br>
+            * 所有解析均在浏览器本地完成，您的数据绝不会上传 *
+        </p>
+    </section>
+
+    <!-- Report View (Populated by JS) -->
+    <main class="container" id="report-view">
+        <!-- Content will be injected here -->
+    </main>
+
+    <script src="scanner.js"></script>
+    <script src="report_engine.js"></script>
+</body>
+
+</html>

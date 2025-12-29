@@ -1,0 +1,31 @@
+# Noita Annual Summary - Strict Privacy Filter
+
+# Ignore EVERYTHING by default
+/*
+
+# --------------------------------------------------
+# ALLOW only the core web application files
+# --------------------------------------------------
+!index.html
+!style.css
+!scanner.js
+!report_engine.js
+!.gitignore
+!README.md
+
+# Documentations (Keep local)
+deployment_guide.md
+implementation_plan.md
+task.md
+walkthrough.md
+
+# Explicitly ignore common pitfalls just in case
+sessions/
+*.json
+*.html
+!index.html
+*.py
+*.pyb
+__pycache__/
+.vscode/
+.idea/
