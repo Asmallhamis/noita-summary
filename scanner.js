@@ -163,7 +163,10 @@ class NoitaWebScanner {
         sum.total_sessions++;
         sum.total_playtime_s += data.playtime;
         sum.total_gold_collected += data.gold_all;
-        sum.total_gold_spent += data.gold_spent;
+        // 仅在正式局（胜利或死亡）时累加消费金额，确保场均消费统计口径一致
+        if (data.is_victory || data.is_death) {
+            sum.total_gold_spent += data.gold_spent;
+        }
         sum.total_enemies_killed += data.enemies_killed;
 
         sum.behavioral.total_kicks += data.kicks;
