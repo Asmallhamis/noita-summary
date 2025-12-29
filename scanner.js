@@ -20,6 +20,7 @@ class NoitaWebScanner {
             total_gold_collected: 0,
             total_gold_spent: 0,
             total_enemies_killed: 0,
+            total_pollen_killed: 0,
             session_types: { victory: 0, death: 0, unfinished: 0, test_run: 0 },
             death_causes: {},
             all_death_causes: {},
@@ -252,6 +253,9 @@ class NoitaWebScanner {
             Array.from(kDoc.querySelectorAll("kill_map E")).forEach(e => {
                 const key = e.getAttribute("key");
                 const val = parseInt(e.getAttribute("value"));
+                if (key === "pollen") {
+                    sum.total_pollen_killed += val;
+                }
                 sum.enemies_killed_breakdown[key] = (sum.enemies_killed_breakdown[key] || 0) + val;
             });
         }
@@ -315,6 +319,15 @@ class NoitaWebScanner {
         if (s.session_types.victory >= 10) badges.push({ icon: "👑", name: "大功业", desc: "10+次完成伟大之作" });
         if (s.behavioral.total_kicks > 1000) badges.push({ icon: "🦵", name: "黄金右脚", desc: "1000+次踢击，力大砖飞" });
         if (s.behavioral.total_wands_edited > 3000) badges.push({ icon: "🛠️", name: "精修匠人", desc: "3000+次法杖构筑" });
+        
+        // 神级成就
+        const realKills = s.total_enemies_killed - s.total_pollen_killed;
+        if (realKills >= 10000) badges.push({ icon: "💀", name: "杀戮之神", desc: "累计击杀(不含花粉)超过1万敌众" });
+        if (s.records.richest_run.gold >= 1000000000) badges.push({ icon: "💰", name: "富可敌国", desc: "单局持有金币突破10亿" });
+        if (s.records.max_win_streak >= 10) badges.push({ icon: "🔥", name: "不败传说", desc: "达成10次以上的恐怖连胜" });
+        if (s.progression.peak_exploration >= 33) badges.push({ icon: "🌌", name: "世界吞噬者", desc: "单局探索超过33个区域" });
+        if (s.behavioral.total_teleports >= 500) badges.push({ icon: "🌀", name: "虚空行者", desc: "累计瞬移次数超过500次" });
+        
         this.summary.badges = badges;
     }
 

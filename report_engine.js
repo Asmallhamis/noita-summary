@@ -32,6 +32,7 @@ window.renderReport = function (data) {
     initNavigation();
     initCharts(data);
     initDownload(data);
+    initPollenToggle(data);
 };
 
 // --- Sub-Renderers ---
@@ -53,8 +54,11 @@ function renderOverview(data) {
                     <div class="stat-label">总游玩时长<span class="info-tip" data-tip="所有轮回累计的实时游戏时间">?</span></div>
                 </div>
                 <div class="mini-card">
-                    <div class="stat-val">${data.total_enemies_killed.toLocaleString()}</div>
-                    <div class="stat-label">累计击杀<span class="info-tip" data-tip="炼金途中所有倒在法杖下的生灵总数">?</span></div>
+                    <div class="stat-val" id="total-kills-val">${data.total_enemies_killed.toLocaleString()}</div>
+                    <div class="stat-label">累计击杀<span class="info-tip" data-tip="杀戮的生灵总数">?</span></div>
+                    <label style="font-size: 0.65rem; color: var(--text-dim); display: flex; align-items: center; gap: 4px; cursor: pointer; justify-content: center; margin-top: 10px; opacity: 0.8;">
+                        <input type="checkbox" id="exclude-pollen" style="cursor: pointer; width: 12px; height: 12px;"> 排除花粉
+                    </label>
                 </div>
                 <div class="mini-card">
                     <div class="stat-val">${avgSpent}</div>
@@ -182,7 +186,7 @@ function renderSuffering(data) {
                 
                 <div style="margin-top:40px; text-align:left; border-top: 1px solid var(--border); padding-top:20px;">
                     <p style="margin: 10px 0;">✦ 累计开启种子: <span style="color:var(--secondary)">${pr.unique_seeds}</span></p>
-                    <p style="margin: 10px 0;">✦ 迈达斯降临次数: <span style="color:var(--secondary)">${pr.gold_infinite_runs}</span></p>
+                    <p style="margin: 10px 0;">✦ 无限钱次数: <span style="color:var(--secondary)">${pr.gold_infinite_runs}</span></p>
                     <p style="margin: 10px 0;">✦ 纯粹主义者: <span style="color:var(--secondary)">${pr.no_wand_runs}</span> 次<span class="info-tip" data-tip="不携带法杖进入新生物群落的通关局数（不计入圣山）">?</span></p>
                 </div>
             </div>
@@ -345,5 +349,17 @@ function initDownload(data) {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    };
+}
+
+function initPollenToggle(data) {
+    const checkbox = document.getElementById('exclude-pollen');
+    const valDisplay = document.getElementById('total-kills-val');
+    if (!checkbox || !valDisplay) return;
+
+    checkbox.onchange = () => {
+        const isExcluded = checkbox.checked;
+        const finalVal = isExcluded ? (data.total_enemies_killed - data.total_pollen_killed) : data.total_enemies_killed;
+        valDisplay.innerText = finalVal.toLocaleString();
     };
 }
