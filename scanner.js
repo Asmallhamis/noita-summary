@@ -40,8 +40,8 @@ class NoitaWebScanner {
             },
             daily_activity: {},
             behavioral: { total_kicks: 0, total_teleports: 0, total_wands_edited: 0, total_projectiles_shot: 0 },
-            suffering: { total_damage_taken: 0, total_healed: 0, peak_hp: 0 },
-            progression: { total_items_picked_up: 0, unique_seeds: 0, gold_infinite_runs: 0, no_wand_runs: 0 },
+            suffering: { total_damage_taken: 0, total_healed: 0 },
+            progression: { total_items_picked_up: 0, unique_seeds: 0, gold_infinite_runs: 0, no_wand_runs: 0, peak_exploration: 0 },
             death_groups: {},
             death_locations: [],
             fatal_spots: {},
@@ -170,10 +170,9 @@ class NoitaWebScanner {
 
         sum.suffering.total_damage_taken += data.damage_taken;
         sum.suffering.total_healed += data.healed;
-        // Noita XML 中的 hp 是实际血量 * 25，这里除以 25 还原为玩家看到的数值
-        sum.suffering.peak_hp = Math.max(sum.suffering.peak_hp, data.hp_max / 25);
 
         sum.progression.total_items_picked_up += data.items_picked;
+        sum.progression.peak_exploration = Math.max(sum.progression.peak_exploration, data.places_visited);
         if (data.gold_infinite) sum.progression.gold_infinite_runs++;
         if (data.world_seed) this.raw.seedsSet.add(data.world_seed);
         if (data.is_victory && data.biomes_with_wands === 0) sum.progression.no_wand_runs++;
@@ -323,9 +322,9 @@ class NoitaWebScanner {
         const med = s.medians;
         this.summary.radar_stats = {
             "战斗力": Math.min(100, Math.floor((med.kills / 100) * 100)),
-            "金钱控制": Math.min(100, Math.floor((Math.min(10000, med.gold) / 10000) * 40 + (Math.min(5000, med.gold_spent) / 5000) * 60)),
+            "金钱控制": Math.min(100, Math.floor((Math.min(100000, med.gold) / 100000) * 40 + (Math.min(50000, med.gold_spent) / 50000) * 60)),
             "探索欲": Math.min(100, Math.floor((med.side_biomes / 5) * 100)),
-            "存活率": Math.floor(s.session_types.victory / Math.max(1, s.total_sessions) * 500), // Adjusted logic
+            "存活率": Math.min(100, Math.floor(s.session_types.victory / Math.max(1, s.session_types.victory + s.session_types.death) * 100)),
             "肝度": Math.min(100, Math.floor((s.total_playtime_s / 360000) * 50 + (Object.keys(s.daily_activity).length / 60) * 50)),
             "博学": Math.min(100, Math.floor((Object.keys(s.biomes_visited).length / 32) * 100))
         };

@@ -37,7 +37,8 @@ window.renderReport = function (data) {
 
 function renderOverview(data) {
     const totalHours = (data.total_playtime_s / 3600).toFixed(1);
-    const avgSpent = (data.total_gold_spent / data.total_sessions).toFixed(0);
+    const formalSessions = data.session_types.victory + data.session_types.death;
+    const avgSpent = formalSessions > 0 ? (data.total_gold_spent / formalSessions).toFixed(0) : 0;
     return `
         <div class="report-card">
             <h2>${data.year} 年度概览</h2>
@@ -138,8 +139,8 @@ function renderEcology(data) {
                         <div class="stat-label">场均割草数</div>
                     </div>
                     <div class="mini-card">
-                        <div class="stat-val">${data.suffering.peak_hp > 1000000 ? (data.suffering.peak_hp / 1000000).toFixed(1) + 'M' : Math.floor(data.suffering.peak_hp).toLocaleString()}</div>
-                        <div class="stat-label">血量巅峰 (Max HP)</div>
+                        <div class="stat-val">${data.progression.peak_exploration}</div>
+                        <div class="stat-label">探索之最 (地点数)</div>
                     </div>
                 </div>
             </div>
@@ -238,6 +239,7 @@ function initNavigation() {
 }
 
 function initCharts(data) {
+    if (!data.radar_stats || Object.keys(data.radar_stats).length === 0) return;
     // 1. Radar
     new Chart(document.getElementById('radarChart'), {
         type: 'radar',
