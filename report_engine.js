@@ -116,7 +116,7 @@ function renderBehaviorStyle(data) {
             <p class="subtitle" style="margin-top: -20px;">${styleTitle}</p>
             <div class="big-grid">
                 <div class="mini-card"><div class="stat-val">${b.total_kicks.toLocaleString()}</div><div class="stat-label">踢击<span class="info-tip" data-tip="黄金右脚的艺术，包含踢物体和生物">?</span></div></div>
-                <div class="mini-card"><div class="stat-val">${b.total_teleports.toLocaleString()}</div><div class="stat-label">瞬移<span class="info-tip" data-tip="通过法杖或技能实现的坐标跃迁次数">?</span></div></div>
+                <div class="mini-card"><div class="stat-val">${b.total_teleports.toLocaleString()}</div><div class="stat-label">瞬移<span class="info-tip" data-tip="使用传送法术或技能的次数（注：传送投射物可能不计入）">?</span></div></div>
                 <div class="mini-card"><div class="stat-val">${b.total_wands_edited.toLocaleString()}</div><div class="stat-label">调校法杖<span class="info-tip" data-tip="在神圣之山或通过技能修改法杖构筑的次数">?</span></div></div>
                 <div class="mini-card"><div class="stat-val">${(b.total_projectiles_shot / 1000).toFixed(1)}k</div><div class="stat-label">射出咒语<span class="info-tip" data-tip="所有轮回中发射的法术投射物总数">?</span></div></div>
             </div>
@@ -166,13 +166,13 @@ function renderSuffering(data) {
                 </div>
                 <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-top:10px">
                     <span>${Math.floor(sd.total_damage_taken).toLocaleString()} Damage</span>
-                    <span>${Math.floor(sd.total_healed).toLocaleString()} Healed</span>
+                    <span>${Math.floor(sd.total_healed).toLocaleString()} Healed<span class="info-tip" data-tip="注：治疗液的恢复通常不计入此项">?</span></span>
                 </div>
                 
                 <div style="margin-top:40px; text-align:left; border-top: 1px solid var(--border); padding-top:20px;">
                     <p style="margin: 10px 0;">✦ 累计开启种子: <span style="color:var(--secondary)">${pr.unique_seeds}</span></p>
                     <p style="margin: 10px 0;">✦ 迈达斯降临次数: <span style="color:var(--secondary)">${pr.gold_infinite_runs}</span></p>
-                    <p style="margin: 10px 0;">✦ 纯粹主义者 (不使用法杖通关): <span style="color:var(--secondary)">${pr.no_wand_runs}</span> 次</p>
+                    <p style="margin: 10px 0;">✦ 纯粹主义者: <span style="color:var(--secondary)">${pr.no_wand_runs}</span> 次<span class="info-tip" data-tip="不携带法杖进入新生物群落的通关局数（不计入圣山）">?</span></p>
                 </div>
             </div>
         </div>

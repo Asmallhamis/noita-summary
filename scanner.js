@@ -311,7 +311,7 @@ class NoitaWebScanner {
         const badges = [];
         if (s.total_sessions >= 200) badges.push({ icon: "🧙‍♂️", name: "大炼金术师", desc: "200+次轮回的试炼" });
         if (s.records.longest_session.playtime > 10800) badges.push({ icon: "⌛", name: "坚毅之心", desc: "单局坚持3小时以上" });
-        if (s.session_types.victory >= 10) badges.push({ icon: "👑", name: "弑神者", desc: "10+次完成伟大之作" });
+        if (s.session_types.victory >= 10) badges.push({ icon: "👑", name: "大功业", desc: "10+次完成伟大之作" });
         if (s.behavioral.total_kicks > 1000) badges.push({ icon: "🦵", name: "黄金右脚", desc: "1000+次踢击，力大砖飞" });
         if (s.behavioral.total_wands_edited > 3000) badges.push({ icon: "🛠️", name: "精修匠人", desc: "3000+次法杖构筑" });
         this.summary.badges = badges;
