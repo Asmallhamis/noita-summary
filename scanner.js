@@ -5,6 +5,8 @@ class NoitaWebScanner {
             playtimes: [],
             golds: [],
             goldsSpent: [],
+            goldsSpentNoPoly: [],
+            goldsNoPoly: [],
             kills: [],
             sideBiomes: [],
             sessionsData: [],
@@ -19,9 +21,10 @@ class NoitaWebScanner {
             total_playtime_s: 0,
             total_gold_collected: 0,
             total_gold_spent: 0,
+            total_gold_spent_no_poly: 0,
             total_enemies_killed: 0,
             total_pollen_killed: 0,
-            session_types: { victory: 0, death: 0, unfinished: 0, test_run: 0 },
+            session_types: { victory: 0, death: 0, death_poly: 0, unfinished: 0, test_run: 0 },
             death_causes: {},
             all_death_causes: {},
             biomes_visited: {},
@@ -166,6 +169,9 @@ class NoitaWebScanner {
         // 仅在正式局（胜利或死亡）时累加消费金额，确保场均消费统计口径一致
         if (data.is_victory || data.is_death) {
             sum.total_gold_spent += data.gold_spent;
+            if (data.killed_by !== "变形") {
+                sum.total_gold_spent_no_poly += data.gold_spent;
+            }
         }
         sum.total_enemies_killed += data.enemies_killed;
 
@@ -213,7 +219,9 @@ class NoitaWebScanner {
         if (data.is_victory) { sum.session_types.victory++; typeStr = "victory"; }
         else if (data.is_test_run) { sum.session_types.test_run++; typeStr = "test"; }
         else if (data.is_death) {
-            sum.session_types.death++; typeStr = "death";
+            sum.session_types.death++;
+            if (data.killed_by === "变形") sum.session_types.death_poly++;
+            typeStr = "death";
             sum.death_locations.push([Math.round(data.death_pos.x * 10) / 10, Math.round(data.death_pos.y * 10) / 10]);
             const spot = `${Math.floor(data.death_pos.x / 500)},${Math.floor(data.death_pos.y / 500)}`;
             sum.fatal_spots[spot] = (sum.fatal_spots[spot] || 0) + 1;
@@ -238,6 +246,10 @@ class NoitaWebScanner {
             this.raw.playtimes.push(data.playtime);
             this.raw.golds.push(data.gold_all);
             this.raw.goldsSpent.push(data.gold_spent);
+            if (data.killed_by !== "变形") {
+                this.raw.goldsNoPoly.push(data.gold_all);
+                this.raw.goldsSpentNoPoly.push(data.gold_spent);
+            }
             this.raw.kills.push(data.enemies_killed);
             this.raw.sideBiomes.push(data.side_biomes_count);
         }
@@ -312,6 +324,8 @@ class NoitaWebScanner {
             playtime: getMedian(this.raw.playtimes),
             gold: getMedian(this.raw.golds),
             gold_spent: getMedian(this.raw.goldsSpent),
+            gold_no_poly: getMedian(this.raw.goldsNoPoly),
+            gold_spent_no_poly: getMedian(this.raw.goldsSpentNoPoly),
             kills: getMedian(this.raw.kills),
             side_biomes: getMedian(this.raw.sideBiomes)
         };
@@ -357,7 +371,7 @@ class NoitaWebScanner {
         const med = s.medians;
         this.summary.radar_stats = {
             "杀戮欲": Math.min(100, Math.floor((med.kills / 30) * 100)),
-            "金钱控制": Math.min(100, Math.floor((Math.min(7000, med.gold) / 7000) * 40 + (Math.min(3000, med.gold_spent) / 3000) * 60)),
+            "金钱控制": Math.min(100, Math.floor((Math.min(7000, med.gold_no_poly) / 7000) * 40 + (Math.min(3000, med.gold_spent_no_poly) / 3000) * 60)),
             "探索欲": Math.min(100, Math.floor((med.side_biomes / 5) * 100)),
             "存活率": Math.min(100, Math.floor(s.session_types.victory / Math.max(1, s.session_types.victory + s.session_types.death) * 100)),
             "肝度": Math.min(100, Math.floor((s.total_playtime_s / 360000) * 50 + (Object.keys(s.daily_activity).length / 60) * 50)),

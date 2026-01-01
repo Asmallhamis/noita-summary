@@ -34,6 +34,7 @@ window.renderReport = function (data) {
     initCharts(data);
     initDownload(data);
     initPollenToggle(data);
+    initGoldToggle(data);
 };
 
 // --- Sub-Renderers ---
@@ -66,8 +67,11 @@ function renderOverview(data) {
                     <div class="stat-label">收集物品总数<span class="info-tip" data-tip="items,全年捡起的法杖、药水等物品总计">?</span></div>
                 </div>
                 <div class="mini-card">
-                    <div class="stat-val">${avgSpent}</div>
+                    <div class="stat-val" id="avg-spent-val">${avgSpent}</div>
                     <div class="stat-label">场均消费<span class="info-tip" data-tip="仅统计正式局（胜利/失败）中购买物品的花费">?</span></div>
+                    <label style="font-size: 0.65rem; color: var(--text-dim); display: flex; align-items: center; gap: 4px; cursor: pointer; justify-content: center; margin-top: 10px; opacity: 0.8;">
+                        <input type="checkbox" id="exclude-poly" style="cursor: pointer; width: 12px; height: 12px;"> 排除变形
+                    </label>
                 </div>
                 <div class="mini-card">
                     <div class="stat-val">${data.progression.peak_exploration}</div>
@@ -143,7 +147,7 @@ function renderRadar(data) {
                 </div>
                 <div class="formula-list">
                     <div class="formula-item"><strong>杀戮欲</strong><span>正式局(胜/败)击杀中位数 / 30</span></div>
-                    <div class="formula-item"><strong>金钱控制</strong><span>中位数：总获得/7k(权重40%) + 总花费/3k(60%)</span></div>
+                    <div class="formula-item"><strong>金钱控制</strong><span>中位数：总获得/7k(权重40%) + 总花费/3k(60%) (已默认排除变形死亡局)</span></div>
                     <div class="formula-item"><strong>探索欲</strong><span>场均进入非主线群落数 / 5 (真菌洞穴、坍塌矿场也计分)</span></div>
                     <div class="formula-item"><strong>存活率</strong><span>正式局胜率 (胜利次数 / 胜+败总局数)</span></div>
                     <div class="formula-item"><strong>肝度</strong><span>总时长/100h (权重50%) + 活跃天数/60天 (50%)</span></div>
@@ -425,5 +429,25 @@ function initPollenToggle(data) {
         const isExcluded = checkbox.checked;
         const finalVal = isExcluded ? (data.total_enemies_killed - data.total_pollen_killed) : data.total_enemies_killed;
         valDisplay.innerText = finalVal.toLocaleString();
+    };
+}
+
+function initGoldToggle(data) {
+    const checkbox = document.getElementById('exclude-poly');
+    const valDisplay = document.getElementById('avg-spent-val');
+    if (!checkbox || !valDisplay) return;
+
+    const formalSessions = data.session_types.victory + data.session_types.death;
+    const formalSessionsNoPoly = data.session_types.victory + (data.session_types.death - data.session_types.death_poly);
+
+    checkbox.onchange = () => {
+        const isExcluded = checkbox.checked;
+        let finalVal;
+        if (isExcluded) {
+            finalVal = formalSessionsNoPoly > 0 ? (data.total_gold_spent_no_poly / formalSessionsNoPoly).toFixed(0) : 0;
+        } else {
+            finalVal = formalSessions > 0 ? (data.total_gold_spent / formalSessions).toFixed(0) : 0;
+        }
+        valDisplay.innerText = finalVal;
     };
 }
