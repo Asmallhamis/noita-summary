@@ -34,15 +34,14 @@ window.renderReport = function (data) {
     initCharts(data);
     initDownload(data);
     initPollenToggle(data);
-    initGoldToggle(data);
 };
 
 // --- Sub-Renderers ---
 
 function renderOverview(data) {
     const totalHours = (data.total_playtime_s / 3600).toFixed(1);
-    const formalSessions = data.session_types.victory + data.session_types.death;
-    const avgSpent = formalSessions > 0 ? (data.total_gold_spent / formalSessions).toFixed(0) : 0;
+    const goldTotal = formatBigNumber(data.total_gold_collected);
+    const infiniteRuns = data.progression.gold_infinite_runs;
     return `
         <div class="report-card">
             <h2>${data.year} 年度概览</h2>
@@ -67,11 +66,12 @@ function renderOverview(data) {
                     <div class="stat-label">收集物品总数<span class="info-tip" data-tip="items,全年捡起的法杖、药水等物品总计">?</span></div>
                 </div>
                 <div class="mini-card">
-                    <div class="stat-val" id="avg-spent-val">${avgSpent}</div>
-                    <div class="stat-label">场均消费<span class="info-tip" data-tip="仅统计正式局（胜利/失败）中购买物品的花费">?</span></div>
-                    <label style="font-size: 0.65rem; color: var(--text-dim); display: flex; align-items: center; gap: 4px; cursor: pointer; justify-content: center; margin-top: 10px; opacity: 0.8;">
-                        <input type="checkbox" id="exclude-poly" style="cursor: pointer; width: 12px; height: 12px;"> 排除变形
-                    </label>
+                    <div class="stat-val">${goldTotal}</div>
+                    <div class="stat-label">累计金币收益<span class="info-tip" data-tip="全年所有轮回（非无限钱局）获得金币的总和">?</span></div>
+                </div>
+                <div class="mini-card">
+                    <div class="stat-val">${infiniteRuns}</div>
+                    <div class="stat-label">达成无限钱<span class="info-tip" data-tip="财力突破天际，金币显示为无限的局数">?</span></div>
                 </div>
                 <div class="mini-card">
                     <div class="stat-val">${data.progression.peak_exploration}</div>
@@ -432,22 +432,3 @@ function initPollenToggle(data) {
     };
 }
 
-function initGoldToggle(data) {
-    const checkbox = document.getElementById('exclude-poly');
-    const valDisplay = document.getElementById('avg-spent-val');
-    if (!checkbox || !valDisplay) return;
-
-    const formalSessions = data.session_types.victory + data.session_types.death;
-    const formalSessionsNoPoly = data.session_types.victory + (data.session_types.death - data.session_types.death_poly);
-
-    checkbox.onchange = () => {
-        const isExcluded = checkbox.checked;
-        let finalVal;
-        if (isExcluded) {
-            finalVal = formalSessionsNoPoly > 0 ? (data.total_gold_spent_no_poly / formalSessionsNoPoly).toFixed(0) : 0;
-        } else {
-            finalVal = formalSessions > 0 ? (data.total_gold_spent / formalSessions).toFixed(0) : 0;
-        }
-        valDisplay.innerText = finalVal;
-    };
-}

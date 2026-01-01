@@ -165,13 +165,16 @@ class NoitaWebScanner {
         const sum = this.summary;
         sum.total_sessions++;
         sum.total_playtime_s += data.playtime;
-        sum.total_gold_collected += data.gold_all;
-        // 仅在正式局（胜利或死亡）时累加消费金额，确保场均消费统计口径一致
+        // 如果是无限钱局，不累加进总获得量，防止数据溢出或异常
+        if (data.gold_infinite) {
+            // 无限钱局不计入总收集额
+        } else {
+            sum.total_gold_collected += data.gold_all;
+        }
+
+        // 场均消费统计（保留基础统计，但不再作为主要展示）
         if (data.is_victory || data.is_death) {
             sum.total_gold_spent += data.gold_spent;
-            if (data.killed_by !== "变形") {
-                sum.total_gold_spent_no_poly += data.gold_spent;
-            }
         }
         sum.total_enemies_killed += data.enemies_killed;
 
