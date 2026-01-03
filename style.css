@@ -88,6 +88,29 @@ body {
     transform: scale(0.95);
 }
 
+#bg-egg {
+    position: fixed;
+    right: -30px;
+    /* 隐藏大部分 */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(46, 196, 182, 0.4), transparent 70%);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1001;
+    transition: all 0.5s ease;
+    filter: blur(2px);
+}
+
+#bg-egg:hover {
+    right: -20px;
+    background: radial-gradient(circle, rgba(46, 196, 182, 0.8), transparent 70%);
+    filter: blur(0px);
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;

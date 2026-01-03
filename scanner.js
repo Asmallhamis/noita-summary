@@ -602,31 +602,39 @@ class MagicParticles {
 
 // Background Carousel Logic
 const backgrounds = ['assets/bg_noita.jpg', 'assets/bg_noita_2.jpg'];
+const eggBackground = 'assets/wdyjhfg.png';
 let currentBgIndex = 0;
 const bgElement = document.getElementById('bg-carousel');
 const prevBtn = document.getElementById('bg-prev');
 const nextBtn = document.getElementById('bg-next');
+const eggBtn = document.getElementById('bg-egg');
 
-function updateBackground(index) {
+function updateBackground(url) {
     if (bgElement) {
-        bgElement.style.backgroundImage = `url('${backgrounds[index]}')`;
+        bgElement.style.backgroundImage = `url('${url}')`;
     }
 }
 
 if (prevBtn && nextBtn) {
     prevBtn.addEventListener('click', () => {
         currentBgIndex = (currentBgIndex - 1 + backgrounds.length) % backgrounds.length;
-        updateBackground(currentBgIndex);
+        updateBackground(backgrounds[currentBgIndex]);
     });
 
     nextBtn.addEventListener('click', () => {
         currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
-        updateBackground(currentBgIndex);
+        updateBackground(backgrounds[currentBgIndex]);
+    });
+}
+
+if (eggBtn) {
+    eggBtn.addEventListener('click', () => {
+        updateBackground(eggBackground);
     });
 }
 
 // Initial set
-updateBackground(currentBgIndex);
+updateBackground(backgrounds[currentBgIndex]);
 
 // Initialize Particles
 new MagicParticles('title-particles');
