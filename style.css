@@ -114,6 +114,19 @@ h1 {
     z-index: 10;
 }
 
+#title-particles {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1000px;
+    height: 600px;
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(1px);
+    opacity: 0.8;
+}
+
 .title-img {
     max-width: 700px;
     width: 100%;

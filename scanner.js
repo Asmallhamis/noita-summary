@@ -532,6 +532,74 @@ btn.addEventListener('click', async () => {
         }
     }
 });
+
+// Magic Particles Engine
+class MagicParticles {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        if (!this.canvas) return;
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.colors = ['#9d4edd', '#2ec4b6', '#ffffff', '#7b2cbf'];
+
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        this.init();
+        this.animate();
+    }
+
+    resize() {
+        this.canvas.width = 1000;
+        this.canvas.height = 600;
+    }
+
+    init() {
+        for (let i = 0; i < 60; i++) {
+            this.particles.push(this.createParticle());
+        }
+    }
+
+    createParticle() {
+        return {
+            x: Math.random() * this.canvas.width,
+            y: Math.random() * this.canvas.height,
+            size: Math.random() * 2 + 0.5,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4 - 0.2, // 略微向上漂浮
+            alpha: Math.random(),
+            color: this.colors[Math.floor(Math.random() * this.colors.length)],
+            life: Math.random() * 0.01 + 0.002
+        };
+    }
+
+    animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.particles.forEach((p, i) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= p.life;
+
+            if (p.alpha <= 0) {
+                this.particles[i] = this.createParticle();
+                this.particles[i].alpha = 0;
+                this.particles[i].life = Math.random() * 0.01 + 0.002;
+            } else if (p.alpha < 1) {
+                // Fading in initially
+                if (p.alpha < 0.5) p.alpha += 0.01;
+            }
+
+            this.ctx.fillStyle = p.color;
+            this.ctx.globalAlpha = p.alpha;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            this.ctx.fill();
+        });
+
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
 // Background Carousel Logic
 const backgrounds = ['bg_noita.jpg', 'bg_noita_2.jpg'];
 let currentBgIndex = 0;
@@ -559,3 +627,6 @@ if (prevBtn && nextBtn) {
 
 // Initial set
 updateBackground(currentBgIndex);
+
+// Initialize Particles
+new MagicParticles('title-particles');
