@@ -529,3 +529,30 @@ btn.addEventListener('click', async () => {
         }
     }
 });
+// Background Carousel Logic
+const backgrounds = ['bg_noita.jpg', 'bg_noita_2.jpg'];
+let currentBgIndex = 0;
+const bgElement = document.getElementById('bg-carousel');
+const prevBtn = document.getElementById('bg-prev');
+const nextBtn = document.getElementById('bg-next');
+
+function updateBackground(index) {
+    if (bgElement) {
+        bgElement.style.backgroundImage = `url('${backgrounds[index]}')`;
+    }
+}
+
+if (prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', () => {
+        currentBgIndex = (currentBgIndex - 1 + backgrounds.length) % backgrounds.length;
+        updateBackground(currentBgIndex);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        currentBgIndex = (currentBgIndex + 1) % backgrounds.length;
+        updateBackground(currentBgIndex);
+    });
+}
+
+// Initial set
+updateBackground(currentBgIndex);

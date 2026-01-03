@@ -13,11 +13,25 @@
 </head>
 
 <body>
-    <div class="bg-gradient"></div>
+    <div class="bg-gradient" id="bg-carousel"></div>
+    <div class="bg-controls">
+        <button class="bg-btn" id="bg-prev" title="上一个背景">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"></path>
+            </svg>
+        </button>
+        <button class="bg-btn" id="bg-next" title="下一个背景">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"></path>
+            </svg>
+        </button>
+    </div>
 
     <!-- Landing Page -->
     <section class="container hero" id="landing-page">
-        <h1 id="main-title">NOITA 2025</h1>
+        <h1 id="main-title">
+            <img src="title_art.png" alt="Noita 年度总结" class="title-img">
+        </h1>
         <p class="subtitle">属于炼金术师的年度记忆。解锁所有轮回中的真理、受难与神迹。</p>
 
         <button class="btn-primary" id="open-folder">
@@ -45,8 +59,9 @@
             * 所有解析均在浏览器本地完成，您的数据绝不会上传 *
         </p>
         <p style="margin-top: 20px; color: var(--text-dim); font-size: 0.6rem; opacity: 0.4;">
-            <a href="https://github.com/Asmallhamis/noita-summary" target="_blank" style="color: inherit; text-decoration: underline;">GitHub Repository</a> |
-            Version 2026.01.01.13 (若功能未更新请尝试 Ctrl+F5)
+            <a href="https://github.com/Asmallhamis/noita-summary" target="_blank"
+                style="color: inherit; text-decoration: underline;">GitHub Repository</a> |
+            Version 2026.01.03.01 (若功能未更新请尝试 Ctrl+F5)
         </p>
     </section>
 
