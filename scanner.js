@@ -10,7 +10,8 @@ class NoitaWebScanner {
             kills: [],
             sideBiomes: [],
             sessionsData: [],
-            seedsSet: new Set()
+            seedsSet: new Set(),
+            items: []
         };
     }
 
@@ -255,6 +256,7 @@ class NoitaWebScanner {
             }
             this.raw.kills.push(data.enemies_killed);
             this.raw.sideBiomes.push(data.side_biomes_count);
+            this.raw.items.push(data.items_picked);
         }
 
         // Records
@@ -330,7 +332,8 @@ class NoitaWebScanner {
             gold_no_poly: getMedian(this.raw.goldsNoPoly),
             gold_spent_no_poly: getMedian(this.raw.goldsSpentNoPoly),
             kills: getMedian(this.raw.kills),
-            side_biomes: getMedian(this.raw.sideBiomes)
+            side_biomes: getMedian(this.raw.sideBiomes),
+            items: getMedian(this.raw.items)
         };
 
         let maxWin = 0, maxLoss = 0, currWin = 0, currLoss = 0;
@@ -357,7 +360,7 @@ class NoitaWebScanner {
         if (s.session_types.victory >= 10) badges.push({ icon: "👑", name: "大功业", desc: "10+次完成伟大之作" });
         if (s.behavioral.total_kicks > 1000) badges.push({ icon: "🦵", name: "黄金右脚", desc: "1000+次踢击，力大砖飞" });
         if (s.behavioral.total_wands_edited > 3000) badges.push({ icon: "🛠️", name: "精修匠人", desc: "3000+次法杖构筑" });
-        
+
         // 神级成就
         const realKills = s.total_enemies_killed - s.total_pollen_killed;
         if (realKills >= 10000) badges.push({ icon: "💀", name: "杀戮之神", desc: "累计击杀(不含花粉)超过1万敌众" });
@@ -365,7 +368,7 @@ class NoitaWebScanner {
         if (s.records.max_win_streak >= 10) badges.push({ icon: "🔥", name: "不败传说", desc: "达成10次以上的恐怖连胜" });
         if (s.progression.peak_exploration >= 33) badges.push({ icon: "🌌", name: "世界吞噬者", desc: "单局探索超过33个区域" });
         if (s.behavioral.total_teleports >= 500) badges.push({ icon: "🌀", name: "虚空行者", desc: "累计瞬移次数超过500次" });
-        
+
         this.summary.badges = badges;
     }
 
@@ -374,7 +377,7 @@ class NoitaWebScanner {
         const med = s.medians;
         this.summary.radar_stats = {
             "杀戮欲": Math.min(100, Math.floor((med.kills / 30) * 100)),
-            "金钱控制": Math.min(100, Math.floor((Math.min(7000, med.gold_no_poly) / 7000) * 40 + (Math.min(3000, med.gold_spent_no_poly) / 3000) * 60)),
+            "收藏欲": Math.min(100, Math.floor(med.items)),
             "探索欲": Math.min(100, Math.floor((med.side_biomes / 5) * 100)),
             "存活率": Math.min(100, Math.floor(s.session_types.victory / Math.max(1, s.session_types.victory + s.session_types.death) * 100)),
             "肝度": Math.min(100, Math.floor((s.total_playtime_s / 360000) * 50 + (Object.keys(s.daily_activity).length / 60) * 50)),

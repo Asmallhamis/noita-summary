@@ -147,7 +147,7 @@ function renderRadar(data) {
                 </div>
                 <div class="formula-list">
                     <div class="formula-item"><strong>杀戮欲</strong><span>正式局(胜/败)击杀中位数 / 30</span></div>
-                    <div class="formula-item"><strong>金钱控制</strong><span>中位数：总获得/7k(权重40%) + 总花费/3k(60%) (已默认排除变形死亡局)</span></div>
+                    <div class="formula-item"><strong>收藏欲</strong><span>正式局(胜/败)拾获物品中位数 (100个即100分)</span></div>
                     <div class="formula-item"><strong>探索欲</strong><span>场均进入非主线群落数 / 5 (真菌洞穴、坍塌矿场也计分)</span></div>
                     <div class="formula-item"><strong>存活率</strong><span>正式局胜率 (胜利次数 / 胜+败总局数)</span></div>
                     <div class="formula-item"><strong>肝度</strong><span>总时长/100h (权重50%) + 活跃天数/60天 (50%)</span></div>
