@@ -601,7 +601,7 @@ class MagicParticles {
 }
 
 // Background Carousel Logic
-const backgrounds = ['bg_noita.jpg', 'bg_noita_2.jpg'];
+const backgrounds = ['assets/bg_noita.jpg', 'assets/bg_noita_2.jpg'];
 let currentBgIndex = 0;
 const bgElement = document.getElementById('bg-carousel');
 const prevBtn = document.getElementById('bg-prev');
